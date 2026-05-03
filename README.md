@@ -1,2 +1,2 @@
 # sqrt2min.ch
-This is the offical Github Pages repo for sqrt2min.ch page. 
+This is the official GitHub Pages repository for the sqrt2min.ch website. 
