@@ -20,7 +20,6 @@
     html { scroll-behavior: smooth; }
     body { font-family: 'DM Sans', sans-serif; background: var(--off); color: var(--text); }
 
-    /* ── HERO ── */
     #hero {
       height: 100vh;
       display: flex;
@@ -49,6 +48,7 @@
       flex-direction: column;
       align-items: center;
       gap: 36px;
+      transform: translateY(-40px);
     }
 
     .logo-wrap {
@@ -56,6 +56,7 @@
       height: 200px;
       position: relative;
       animation: floatIn 0.9s cubic-bezier(0.22,1,0.36,1) both;
+      cursor: pointer;
     }
 
     .logo-wrap::before {
@@ -71,10 +72,7 @@
     .logo-wrap svg {
       width: 100%; height: 100%;
       filter: drop-shadow(0 8px 32px rgba(13,40,128,0.22));
-      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
     }
-
-    .logo-wrap:hover svg { transform: scale(1.06) translateY(-4px); }
 
     .wordmark {
       font-family: 'Space Mono', monospace;
@@ -113,7 +111,49 @@
 
     .scroll-hint svg { animation: bounce 1.8s infinite; }
 
-    /* ── MEMES ── */
+    .tutti-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--navy);
+      text-decoration: none;
+      border: 2px solid var(--navy);
+      padding: 10px 24px;
+      border-radius: 100px;
+      opacity: 0.7;
+      transition: opacity 0.2s, background 0.2s, color 0.2s;
+      animation: floatIn 0.9s 0.35s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    .tutti-link:hover {
+      opacity: 1;
+      background: var(--navy);
+      color: white;
+    }
+
+    .tutti-banner {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .tutti-banner a {
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      color: var(--navy);
+      text-decoration: none;
+      border: 2px solid var(--navy);
+      padding: 12px 28px;
+      border-radius: 100px;
+      opacity: 0.7;
+      transition: opacity 0.2s, background 0.2s, color 0.2s;
+      display: inline-block;
+    }
+
+    .tutti-banner a:hover {
+      opacity: 1;
+      background: var(--navy);
+      color: white;
+    }
+
     #memes { padding: 80px 40px; }
 
     .memes-header { text-align: center; margin-bottom: 56px; }
@@ -154,7 +194,6 @@
       display: block;
     }
 
-    /* ── LIGHTBOX ── */
     #lightbox {
       display: none; position: fixed; inset: 0;
       background: rgba(9,26,92,0.92);
@@ -187,6 +226,21 @@
       50%       { transform: translateY(8px); }
     }
 
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      15%      { transform: translateX(-12px) rotate(-1deg); }
+      30%      { transform: translateX(12px) rotate(1deg); }
+      45%      { transform: translateX(-10px) rotate(-0.5deg); }
+      60%      { transform: translateX(10px) rotate(0.5deg); }
+      75%      { transform: translateX(-6px); }
+      90%      { transform: translateX(6px); }
+    }
+
+    @keyframes sixsevenPop {
+      from { transform: scale(0.3); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
     @media (max-width: 768px) {
       .memes-grid { grid-template-columns: repeat(2, 1fr); }
       .logo-wrap { width: 140px; height: 155px; }
@@ -201,10 +255,9 @@
 </head>
 <body>
 
-  <!-- HERO -->
   <section id="hero">
     <div class="hero-content">
-      <div class="logo-wrap">
+      <div class="logo-wrap" id="logoWrap">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 761 836">
           <defs><style>.st0{fill:#fff}.st1{fill:#0d2880;fill-rule:evenodd}</style></defs>
           <path class="st1" d="M631,656.8V168.6c.1-2.6-1.8-4.8-4.4-5L171.5,98.4h0s-4-.5-5.7,2.4l-10.7,16.8v595.2c-.1,0,12.2,16.4,12.2,16.4.9,1.1,2.2,1.7,3.7,1.8,2,0,8.1-1,8.1-1l445.1-66.7h0c6.9-1.1,6.9-1.5,6.9-6.6h0Z"/>
@@ -217,7 +270,9 @@
       </div>
       <div class="wordmark">sqrt<span>(</span>2min<span>)</span></div>
       <div class="divider"></div>
-
+      <a href="https://www.tutti.ch/de/seller?id=1079863280926303176" target="_blank" class="tutti-link">
+        Bruchsch no es Gschänk? 🎁
+      </a>
       <div class="scroll-hint" onclick="document.getElementById('memes').scrollIntoView({behavior:'smooth'})">
         <span>Memes</span>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0d2880" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -225,11 +280,14 @@
         </svg>
       </div>
     </div>
-
   </section>
 
-  <!-- MEMES -->
   <section id="memes">
+    <div class="tutti-banner">
+      <a href="https://www.tutti.ch/de/seller?id=1079863280926303176" target="_blank">
+        Bruchsch no es Gschänk? 🎁
+      </a>
+    </div>
     <div class="memes-header">
       <h2>Memes</h2>
       <p>Klick auf ein Bild zum Vergrössern</p>
@@ -237,7 +295,6 @@
     <div class="memes-grid" id="memesGrid"></div>
   </section>
 
-  <!-- SIX SEVEN OVERLAY -->
   <div id="sixseven" style="
     display:none; position:fixed; inset:0; z-index:9999;
     align-items:center; justify-content:center;
@@ -249,10 +306,8 @@
     letter-spacing: -0.04em;
     text-shadow: 0 0 60px rgba(255,255,255,0.5);
     pointer-events: none;
-    animation: none;
   ">SIX SEVEN</div>
 
-  <!-- LIGHTBOX -->
   <div id="lightbox">
     <button id="lightbox-close" onclick="closeLightbox()">✕</button>
     <img id="lightbox-img" src="" alt="">
@@ -262,7 +317,7 @@
     const totalMemes = 57;
     const grid = document.getElementById('memesGrid');
 
-    // ── Memes zufällig shuffeln ──
+    // Memes zufällig shuffeln
     const order = Array.from({length: totalMemes}, (_, i) => i + 1)
       .sort(() => Math.random() - 0.5);
 
@@ -287,7 +342,7 @@
       grid.appendChild(card);
     }
 
-    // ── Lightbox ──
+    // Lightbox
     function openLightbox(src) {
       document.getElementById('lightbox-img').src = src;
       document.getElementById('lightbox').classList.add('active');
@@ -307,22 +362,21 @@
       if (e.key === 'Escape') closeLightbox();
     });
 
-    // ── Jumpscare MP3 ──
+    // Sounds
     const jumpscare = new Audio('jumpscare.mp3');
     function playJumpscare() {
       jumpscare.currentTime = 0;
       jumpscare.play().catch(() => {});
     }
 
-    // ── Six Seven Sound ──
     const sixSevenSound = new Audio('six-seven.mp3');
     function playSixSeven() {
       sixSevenSound.currentTime = 0;
       sixSevenSound.play().catch(() => {});
     }
 
-    // ── Logo wegspringen (Maus + Touch) ──
-    const logoWrap = document.querySelector('.logo-wrap');
+    // Logo wegspringen
+    const logoWrap = document.getElementById('logoWrap');
     const hero = document.getElementById('hero');
     let posX = 0, posY = 0;
 
@@ -341,13 +395,10 @@
         const force = 150;
         let newX = posX - Math.cos(angle + jitter) * force;
         let newY = posY - Math.sin(angle + jitter) * force;
-
-        // Bildschirmgrenzen
         const maxX = heroRect.width / 2 - rect.width / 2 - 10;
         const maxY = heroRect.height / 2 - rect.height / 2 - 10;
         newX = Math.max(-maxX, Math.min(maxX, newX));
         newY = Math.max(-maxY, Math.min(maxY, newY));
-
         posX = newX;
         posY = newY;
         logoWrap.style.transition = 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)';
@@ -360,21 +411,15 @@
       jumpLogo(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
 
-    // ── Logo-Klick: Six Seven Sound + Rickroll + Bildschirm wackeln + SIX SEVEN ──
+    // Logo-Klick: Six Seven Sound + Rickroll + Wackeln + Overlay
     logoWrap.addEventListener('click', () => {
-      // Six Seven Sound abspielen
       playSixSeven();
-
-      // Rickroll nach kurzer Verzögerung
       setTimeout(() => {
         window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank');
       }, 500);
-
-      // Wackeln
       document.body.style.animation = 'none';
       document.body.offsetHeight;
       document.body.style.animation = 'shake 0.5s ease';
-
       const ss = document.getElementById('sixseven');
       ss.style.display = 'flex';
       ss.style.animation = 'sixsevenPop 0.4s cubic-bezier(0.34,1.56,0.64,1)';
@@ -394,22 +439,6 @@
       logoWrap.click();
     });
   </script>
-
-  <style>
-    @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      15%      { transform: translateX(-12px) rotate(-1deg); }
-      30%      { transform: translateX(12px) rotate(1deg); }
-      45%      { transform: translateX(-10px) rotate(-0.5deg); }
-      60%      { transform: translateX(10px) rotate(0.5deg); }
-      75%      { transform: translateX(-6px); }
-      90%      { transform: translateX(6px); }
-    }
-    @keyframes sixsevenPop {
-      from { transform: scale(0.3); opacity: 0; }
-      to   { transform: scale(1); opacity: 1; }
-    }
-  </style>
 
 </body>
 </html>
