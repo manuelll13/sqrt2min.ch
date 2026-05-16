@@ -237,6 +237,21 @@
     <div class="memes-grid" id="memesGrid"></div>
   </section>
 
+  <!-- SIX SEVEN OVERLAY -->
+  <div id="sixseven" style="
+    display:none; position:fixed; inset:0; z-index:9999;
+    align-items:center; justify-content:center;
+    background: rgba(0,0,0,0.7);
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(4rem, 20vw, 12rem);
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.04em;
+    text-shadow: 0 0 60px rgba(255,255,255,0.5);
+    pointer-events: none;
+    animation: none;
+  ">SIX SEVEN</div>
+
   <!-- LIGHTBOX -->
   <div id="lightbox">
     <button id="lightbox-close" onclick="closeLightbox()">✕</button>
@@ -247,27 +262,32 @@
     const totalMemes = 57;
     const grid = document.getElementById('memesGrid');
 
-    for (let i = 1; i <= totalMemes; i++) {
+    // ── Memes zufällig shuffeln ──
+    const order = Array.from({length: totalMemes}, (_, i) => i + 1)
+      .sort(() => Math.random() - 0.5);
+
+    for (let i = 0; i < order.length; i++) {
+      const n = order[i];
       const card = document.createElement('div');
       card.className = 'meme-card';
-      // versucht zuerst .jpg, bei Fehler .png
       const img = document.createElement('img');
-      img.src = `memes/meme${i}.jpg`;
-      img.alt = `Meme ${i}`;
+      img.src = `memes/meme${n}.jpg`;
+      img.alt = `Meme ${n}`;
       img.loading = 'lazy';
       img.onerror = function() {
         if (!this.dataset.tried) {
           this.dataset.tried = '1';
-          this.src = `memes/meme${i}.png`;
+          this.src = `memes/meme${n}.png`;
         } else {
           this.closest('.meme-card').style.display = 'none';
         }
       };
       card.appendChild(img);
-      card.addEventListener('click', () => openLightbox(img.src));
+      card.addEventListener('click', () => { playAirhorn(); openLightbox(img.src); });
       grid.appendChild(card);
     }
 
+    // ── Lightbox ──
     function openLightbox(src) {
       document.getElementById('lightbox-img').src = src;
       document.getElementById('lightbox').classList.add('active');
@@ -286,7 +306,102 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeLightbox();
     });
+
+    // ── Airhorn (Web Audio API, kein externes File nötig) ──
+    function playAirhorn() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const duration = 1.2;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        // Airhorn-typischer abfallender Ton
+        osc.frequency.setValueAtTime(520, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + duration);
+        gain.gain.setValueAtTime(0.6, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + duration);
+      } catch(e) {}
+    }
+
+    // ── Logo wegspringen (Maus + Touch) ──
+    const logo = document.querySelector('.logo-wrap');
+    let logoX = 0, logoY = 0;
+    const maxMove = 120;
+
+    function jumpLogo(clientX, clientY) {
+      const rect = logo.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = clientX - cx;
+      const dy = clientY - cy;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 180) {
+        // wegspringen in die entgegengesetzte Richtung + etwas Zufall
+        const angle = Math.atan2(dy, dx);
+        const jitter = (Math.random() - 0.5) * 1.2;
+        const moveX = -Math.cos(angle + jitter) * maxMove;
+        const moveY = -Math.sin(angle + jitter) * maxMove;
+        // Bildschirmgrenzen prüfen
+        logoX = Math.max(-150, Math.min(150, logoX + moveX));
+        logoY = Math.max(-200, Math.min(200, logoY + moveY));
+        logo.style.transition = 'transform 0.25s cubic-bezier(0.34,1.56,0.64,1)';
+        logo.style.transform = `translate(${logoX}px, ${logoY}px)`;
+      }
+    }
+
+    document.addEventListener('mousemove', (e) => jumpLogo(e.clientX, e.clientY));
+    document.addEventListener('touchmove', (e) => {
+      const t = e.touches[0];
+      jumpLogo(t.clientX, t.clientY);
+    }, {passive: true});
+
+    // ── Logo-Klick: Bildschirm wackeln + SIX SEVEN ──
+    logo.addEventListener('click', () => {
+      // Wackeln
+      document.body.style.animation = 'none';
+      document.body.offsetHeight; // reflow
+      document.body.style.animation = 'shake 0.5s ease';
+
+      // SIX SEVEN anzeigen
+      const ss = document.getElementById('sixseven');
+      ss.style.display = 'flex';
+      ss.style.animation = 'sixsevenPop 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+      setTimeout(() => {
+        ss.style.opacity = '0';
+        ss.style.transition = 'opacity 0.4s';
+        setTimeout(() => {
+          ss.style.display = 'none';
+          ss.style.opacity = '1';
+          ss.style.transition = '';
+        }, 400);
+      }, 1200);
+    });
+
+    // Touch auf Logo
+    logo.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      logo.click();
+    });
   </script>
+
+  <style>
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      15%      { transform: translateX(-12px) rotate(-1deg); }
+      30%      { transform: translateX(12px) rotate(1deg); }
+      45%      { transform: translateX(-10px) rotate(-0.5deg); }
+      60%      { transform: translateX(10px) rotate(0.5deg); }
+      75%      { transform: translateX(-6px); }
+      90%      { transform: translateX(6px); }
+    }
+    @keyframes sixsevenPop {
+      from { transform: scale(0.3); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+  </style>
 
 </body>
 </html>
