@@ -307,11 +307,18 @@
       if (e.key === 'Escape') closeLightbox();
     });
 
-    // ── Airhorn MP3 ──
-    const airhorn = new Audio('airhorn.mp3');
-    function playAirhorn() {
-      airhorn.currentTime = 0;
-      airhorn.play().catch(() => {});
+    // ── Jumpscare MP3 ──
+    const jumpscare = new Audio('jumpscare.mp3');
+    function playJumpscare() {
+      jumpscare.currentTime = 0;
+      jumpscare.play().catch(() => {});
+    }
+
+    // ── Six Seven Sound ──
+    const sixSevenSound = new Audio('six-seven.mp3');
+    function playSixSeven() {
+      sixSevenSound.currentTime = 0;
+      sixSevenSound.play().catch(() => {});
     }
 
     // ── Logo wegspringen (Maus + Touch) ──
@@ -353,8 +360,17 @@
       jumpLogo(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
 
-    // ── Logo-Klick: Bildschirm wackeln + SIX SEVEN ──
+    // ── Logo-Klick: Six Seven Sound + Rickroll + Bildschirm wackeln + SIX SEVEN ──
     logoWrap.addEventListener('click', () => {
+      // Six Seven Sound abspielen
+      playSixSeven();
+
+      // Rickroll nach kurzer Verzögerung
+      setTimeout(() => {
+        window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank');
+      }, 500);
+
+      // Wackeln
       document.body.style.animation = 'none';
       document.body.offsetHeight;
       document.body.style.animation = 'shake 0.5s ease';
