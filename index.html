@@ -358,13 +358,23 @@
     });
 
     // Sounds
-    const jumpscare = new Audio('jumpscare.mp3');
+    const memeSounds = [
+      'airhorn.mp3',
+      'error.mp3',
+      'explosion.mp3',
+      'jumpscare.mp3',
+      'punch-gaming-sound.mp3',
+      'train-horn.mp3',
+      'windows-xp-error.mp3'
+    ].map(f => new Audio(`.sounds/${f}`));
+
     function playJumpscare() {
-      jumpscare.currentTime = 0;
-      jumpscare.play().catch(() => {});
+      const snd = memeSounds[Math.floor(Math.random() * memeSounds.length)];
+      snd.currentTime = 0;
+      snd.play().catch(() => {});
     }
 
-    const sixSevenSound = new Audio('six-seven.mp3');
+    const sixSevenSound = new Audio('.sounds/six-seven.mp3');
     function playSixSeven() {
       sixSevenSound.currentTime = 0;
       sixSevenSound.play().catch(() => {});
