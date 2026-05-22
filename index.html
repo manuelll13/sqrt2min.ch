@@ -366,7 +366,7 @@
       'punch-gaming-sound.mp3',
       'train-horn.mp3',
       'windows-xp-error.mp3'
-    ].map(f => new Audio(`.sounds/${f}`));
+    ].map(f => new Audio(`sounds/${f}`));
 
     function playJumpscare() {
       const snd = memeSounds[Math.floor(Math.random() * memeSounds.length)];
@@ -374,7 +374,7 @@
       snd.play().catch(() => {});
     }
 
-    const sixSevenSound = new Audio('.sounds/six-seven.mp3');
+    const sixSevenSound = new Audio('sounds/six-seven.mp3');
     function playSixSeven() {
       sixSevenSound.currentTime = 0;
       sixSevenSound.play().catch(() => {});
